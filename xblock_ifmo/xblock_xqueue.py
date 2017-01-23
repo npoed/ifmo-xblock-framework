@@ -92,6 +92,13 @@ class XBlockXQueueMixin(AjaxHandlerMixin, XBlock):
             'key': self.queue_key,
             'time': self.queue_time
         }
+        if hasattr(self, 'xqueue_sender_name'):
+            try:
+                decoded_body = json.loads(body)
+                decoded_body['submission_sender'] = self.xqueue_sender_name
+                body = json.dumps(decoded_body)
+            except KeyError or ValueError:
+                pass
         self.queue_interface.send_to_queue(header=header, body=body)
 
     @xqueue_callback
