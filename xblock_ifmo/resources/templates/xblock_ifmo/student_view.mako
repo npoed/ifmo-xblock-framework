@@ -4,8 +4,6 @@
     import json
 %>
 
-## <%namespace name="debug_info_modal" file="_debug_info_modal.mako"/>
-
 <section class="xmodule_display xmodule_CapaModule ifmo-xblock-base" data-context="${json.dumps(context.kwargs)|h}">
 
 <%block name="block_body"/>
@@ -19,7 +17,9 @@
                 <%block name="instructor_actions"/>
             </div>
 
-        <%include file="_student_state_modal.mako" args="**context"/>
+            <%block name="block_modals">
+                <%include file="_student_state_modal.mako" args="**context"/>
+            </%block>
 
 ##         ${debug_info_modal.modal(extra_rows_fn=debug_info_rows)}
 ##         <%include file="_debug_info_modal.mako" args="**context"/>

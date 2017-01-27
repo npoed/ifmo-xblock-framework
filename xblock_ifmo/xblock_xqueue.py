@@ -7,7 +7,9 @@ from xblock.fields import Scope, String, Dict
 from xqueue_api.utils import now, make_hashkey, create_student_info
 from xqueue_api.xobject import XObjectResult
 
+from .fragment import FragmentMakoChain
 from .xblock_ajax import AjaxHandlerMixin
+from .xblock_ifmo import IfmoXBlock
 from .utils import reify
 
 
@@ -33,6 +35,7 @@ def xqueue_callback(target_class_or_func):
         return wrapped
 
 
+@IfmoXBlock.register_resource_dir()
 class XBlockXQueueMixin(AjaxHandlerMixin, XBlock):
 
     queue_name = String(
@@ -107,5 +110,13 @@ class XBlockXQueueMixin(AjaxHandlerMixin, XBlock):
         parent = super(XBlockXQueueMixin, self)
         if hasattr(parent, 'score_update'):
             parent.score_update(submission_result)
+
+    def student_view(self):
+
+        fragment = FragmentMakoChain(base=super(XBlockXQueueMixin, self).student_view(),
+                                     lookup_dirs=self.get_template_dirs())
+        fragment.add_content(self.load_template('xblock_ifmo/student_view.xqueuemixin.mako'))
+        fragment.add_javascript(self.load_js('queue-info-modal.js'))
+        return fragment
 
 
