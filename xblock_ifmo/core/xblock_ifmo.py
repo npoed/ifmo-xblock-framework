@@ -9,17 +9,17 @@ from xblock.core import XBlock
 from xmodule.util.duedate import get_extended_due_date
 from webob.response import Response
 
-from .fragment import FragmentMakoChain
-from .utils import require
-from .xblock_ifmo_fields import IfmoXBlockFields
-from .xblock_ifmo_resources import IfmoXBlockResources
+from ..fragment import FragmentMakoChain
+from ..utils import require
+from .xblock_ifmo_fields import XBlockFieldsMixin
+from .xblock_ifmo_resources import ResourcesMixin
 
 
 logger = logging.getLogger(__name__)
 
 
-@IfmoXBlockResources.register_resource_dir()
-class IfmoXBlock(IfmoXBlockFields, IfmoXBlockResources, XBlock):
+@ResourcesMixin.register_resource_dir("../resources")
+class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
 
     has_score = True
     icon_class = 'problem'
@@ -115,9 +115,9 @@ class IfmoXBlock(IfmoXBlockFields, IfmoXBlockResources, XBlock):
 
         fragment = FragmentMakoChain(lookup_dirs=self.get_template_dirs(),
                                      content=self.load_template('xblock_ifmo/student_view.mako'))
-        fragment.add_javascript(self.load_js('init-modals.js'))
-        fragment.add_javascript(self.load_js('state-modal.js'))
-        fragment.add_javascript(self.load_js('debug-info-modal.js'))
+        fragment.add_javascript(self.load_js('modals/init-modals.js'))
+        fragment.add_javascript(self.load_js('modals/state-modal.js'))
+        fragment.add_javascript(self.load_js('modals/debug-info-modal.js'))
         fragment.add_css(self.load_css('modal.css'))
 
         return fragment

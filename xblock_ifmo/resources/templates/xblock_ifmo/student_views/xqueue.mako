@@ -4,7 +4,7 @@
 
 <%block name="block_modals">
     ${parent.block_modals()}
-    <%include file="xblock_ifmo/_queue_modal.mako" args="**context"/>
+    <%include file="xblock_ifmo/modals/_queue_modal.mako" args="**context"/>
 </%block>
 
 <%block name="instructor_actions">

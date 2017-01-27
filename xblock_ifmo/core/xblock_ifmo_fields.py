@@ -1,7 +1,7 @@
 from xblock.fields import Scope, Integer, String, Float
 
 
-class IfmoXBlockFields(object):
+class XBlockFieldsMixin(object):
 
     display_name = String(
         display_name="Display name",

@@ -18,7 +18,7 @@
             </div>
 
             <%block name="block_modals">
-                <%include file="_student_state_modal.mako" args="**context"/>
+                <%include file="xblock_ifmo/modals/_student_state_modal.mako" args="**context"/>
             </%block>
 
 ##         ${debug_info_modal.modal(extra_rows_fn=debug_info_rows)}

@@ -7,10 +7,10 @@ from xblock.fields import Scope, String, Dict
 from xqueue_api.utils import now, make_hashkey, create_student_info
 from xqueue_api.xobject import XObjectResult
 
-from .fragment import FragmentMakoChain
+from ..fragment import FragmentMakoChain
+from ..utils import reify
 from .xblock_ajax import AjaxHandlerMixin
 from .xblock_ifmo import IfmoXBlock
-from .utils import reify
 
 
 def xqueue_callback(target_class_or_func):
@@ -35,8 +35,8 @@ def xqueue_callback(target_class_or_func):
         return wrapped
 
 
-@IfmoXBlock.register_resource_dir()
-class XBlockXQueueMixin(AjaxHandlerMixin, XBlock):
+@IfmoXBlock.register_resource_dir("../resources")
+class XQueueMixin(AjaxHandlerMixin, XBlock):
 
     queue_name = String(
         scope=Scope.settings,
@@ -68,7 +68,7 @@ class XBlockXQueueMixin(AjaxHandlerMixin, XBlock):
 
     def save_settings(self, data):
 
-        parent = super(XBlockXQueueMixin, self)
+        parent = super(XQueueMixin, self)
         if hasattr(parent, 'save_settings'):
             parent.save_settings(data)
 
@@ -107,16 +107,16 @@ class XBlockXQueueMixin(AjaxHandlerMixin, XBlock):
     @xqueue_callback
     def score_update(self, submission_result):
 
-        parent = super(XBlockXQueueMixin, self)
+        parent = super(XQueueMixin, self)
         if hasattr(parent, 'score_update'):
             parent.score_update(submission_result)
 
     def student_view(self):
 
-        fragment = FragmentMakoChain(base=super(XBlockXQueueMixin, self).student_view(),
+        fragment = FragmentMakoChain(base=super(XQueueMixin, self).student_view(),
                                      lookup_dirs=self.get_template_dirs())
-        fragment.add_content(self.load_template('xblock_ifmo/student_view.xqueuemixin.mako'))
-        fragment.add_javascript(self.load_js('queue-info-modal.js'))
+        fragment.add_content(self.load_template('xblock_ifmo/student_views/xqueue.mako'))
+        fragment.add_javascript(self.load_js('modals/queue-info-modal.js'))
         return fragment
 
 

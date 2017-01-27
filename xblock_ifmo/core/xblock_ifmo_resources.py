@@ -4,7 +4,7 @@ import path
 from django.template import Context, Template
 
 
-class IfmoXBlockResources(object):
+class ResourcesMixin(object):
 
     resource_dirs = []
 
