@@ -120,6 +120,13 @@ class XQueueMixin(AjaxHandlerMixin, XBlock):
         fragment.add_javascript(self.load_js('modals/queue-info-modal.js'))
         return fragment
 
+    def studio_view(self):
+
+        fragment = FragmentMakoChain(base=super(XQueueMixin, self).studio_view(),
+                                     lookup_dirs=self.get_template_dirs())
+        fragment.add_content(self.load_template('xblock_ifmo/settings_views/xqueue.mako'))
+        return fragment
+
     @XBlock.json_handler
     def get_user_queue_status(self, data, suffix=''):
         """
