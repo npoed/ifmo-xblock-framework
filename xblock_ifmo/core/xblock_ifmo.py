@@ -115,6 +115,7 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
 
         fragment = FragmentMakoChain(lookup_dirs=self.get_template_dirs(),
                                      content=self.load_template('xblock_ifmo/student_view.mako'))
+        fragment.add_javascript(self.load_js('ifmo-xblock.js'))
         fragment.add_javascript(self.load_js('modals/init-modals.js'))
         fragment.add_javascript(self.load_js('modals/state-modal.js'))
         fragment.add_javascript(self.load_js('modals/debug-info-modal.js'))

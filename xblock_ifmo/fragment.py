@@ -97,7 +97,7 @@ class FragmentMakoChain(Fragment):
     def resources(self):
         seen = set()
         parent_res = self.base.resources if self.base else []
-        return [x for x in self._resources + parent_res if x not in seen and not seen.add(x)]
+        return [x for x in parent_res + self._resources if x not in seen and not seen.add(x)]
 
     @property
     def content(self):
