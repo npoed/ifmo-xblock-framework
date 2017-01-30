@@ -112,7 +112,7 @@ class XQueueMixin(AjaxHandlerMixin, XBlock):
         if hasattr(parent, 'score_update'):
             parent.score_update(submission_result)
 
-    def student_view(self):
+    def student_view(self, context=None):
 
         fragment = FragmentMakoChain(base=super(XQueueMixin, self).student_view(),
                                      lookup_dirs=self.get_template_dirs())
@@ -120,7 +120,7 @@ class XQueueMixin(AjaxHandlerMixin, XBlock):
         fragment.add_javascript(self.load_js('modals/queue-info-modal.js'))
         return fragment
 
-    def studio_view(self):
+    def studio_view(self, context=None):
 
         fragment = FragmentMakoChain(base=super(XQueueMixin, self).studio_view(),
                                      lookup_dirs=self.get_template_dirs())

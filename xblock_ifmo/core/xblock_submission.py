@@ -14,7 +14,7 @@ from ..fragment import FragmentMakoChain
 @IfmoXBlock.register_resource_dir("../resources")
 class SubmissionsMixin(AjaxHandlerMixin):
 
-    def student_view(self):
+    def student_view(self, context=None):
 
         fragment = FragmentMakoChain(base=super(SubmissionsMixin, self).student_view(),
                                      lookup_dirs=self.get_template_dirs())
