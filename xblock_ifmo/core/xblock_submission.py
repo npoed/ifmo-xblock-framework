@@ -6,7 +6,7 @@ from xblock.core import XBlock
 
 from .xblock_ajax import AjaxHandlerMixin
 from .xblock_ifmo import IfmoXBlock
-from ..utils import datetime_mapper
+from ..utils import datetime_mapper, deep_update
 
 from ..fragment import FragmentMakoChain
 
@@ -20,6 +20,11 @@ class SubmissionsMixin(AjaxHandlerMixin):
                                      lookup_dirs=self.get_template_dirs())
         fragment.add_content(self.load_template('xblock_ifmo/student_views/submissions.mako'))
         fragment.add_javascript(self.load_js('modals/submissions-info-modal.js'))
+
+        context = context or {}
+        deep_update(context, {'render_context': self.get_student_context()})
+        fragment.add_context(context)
+
         return fragment
 
     @XBlock.json_handler

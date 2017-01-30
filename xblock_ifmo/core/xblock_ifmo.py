@@ -10,7 +10,7 @@ from xmodule.util.duedate import get_extended_due_date
 from webob.response import Response
 
 from ..fragment import FragmentMakoChain
-from ..utils import require
+from ..utils import require, reify_f, deep_update
 from .xblock_ifmo_fields import XBlockFieldsMixin
 from .xblock_ifmo_resources import ResourcesMixin
 
@@ -121,6 +121,10 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
         fragment.add_javascript(self.load_js('modals/debug-info-modal.js'))
         fragment.add_css(self.load_css('modal.css'))
 
+        context = context or {}
+        deep_update(context, {'render_context': self.get_student_context()})
+        fragment.add_context(context)
+
         return fragment
 
     def studio_view(self, context=None):
@@ -131,6 +135,7 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
 
         return fragment
 
+    @reify_f
     def get_student_context(self, user=None):
         return self.get_student_context_base(user)
 

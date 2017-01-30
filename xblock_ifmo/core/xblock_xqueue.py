@@ -9,7 +9,7 @@ from xqueue_api.utils import now, make_hashkey, create_student_info
 from xqueue_api.xobject import XObjectResult
 
 from ..fragment import FragmentMakoChain
-from ..utils import reify
+from ..utils import reify, deep_update
 from .xblock_ajax import AjaxHandlerMixin
 from .xblock_ifmo import IfmoXBlock
 
@@ -118,6 +118,11 @@ class XQueueMixin(AjaxHandlerMixin, XBlock):
                                      lookup_dirs=self.get_template_dirs())
         fragment.add_content(self.load_template('xblock_ifmo/student_views/xqueue.mako'))
         fragment.add_javascript(self.load_js('modals/queue-info-modal.js'))
+
+        context = context or {}
+        deep_update(context, {'render_context': self.get_student_context()})
+        fragment.add_context(context)
+
         return fragment
 
     def studio_view(self, context=None):

@@ -6,7 +6,7 @@ import hashlib
 import pytz
 
 from django.core.exceptions import PermissionDenied
-from functools import partial
+from functools import partial, wraps
 
 
 def require(condition):
@@ -48,6 +48,19 @@ def reify(meth):
         inst.__dict__[meth.__name__] = value
         return value
     return property(getter)
+
+
+def reify_f(function):
+    memo = {}
+    @wraps(function)
+    def wrapper(*args):
+        if args in memo:
+            return memo[args]
+        else:
+            rv = function(*args)
+            memo[args] = rv
+            return rv
+    return wrapper
 
 
 def datetime_mapper(x, date_format):
