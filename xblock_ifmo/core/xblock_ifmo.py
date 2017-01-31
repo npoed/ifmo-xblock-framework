@@ -115,6 +115,7 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
 
         fragment = FragmentMakoChain(lookup_dirs=self.get_template_dirs(),
                                      content=self.load_template('xblock_ifmo/student_view.mako'))
+        fragment.add_javascript(self.load_js('ifmo-xblock-utils.js'))
         fragment.add_javascript(self.load_js('ifmo-xblock.js'))
         fragment.add_javascript(self.load_js('modals/init-modals.js'))
         fragment.add_javascript(self.load_js('modals/state-modal.js'))
@@ -131,7 +132,8 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
 
         fragment = FragmentMakoChain(lookup_dirs=self.get_template_dirs(),
                                      content=self.load_template('xblock_ifmo/settings_view.mako'))
-        fragment.add_javascript(self.load_js('ifmo-xblock.js'))
+        fragment.add_javascript(self.load_js('ifmo-xblock-utils.js'))
+        fragment.add_javascript(self.load_js('ifmo-xblock-studio.js'))
         fragment.add_css(self.load_css('settings.css'))
         fragment.initialize_js('IfmoXBlockSettingsView')
 
