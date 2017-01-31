@@ -130,6 +130,11 @@ class XQueueMixin(AjaxHandlerMixin, XBlock):
         fragment = FragmentMakoChain(base=super(XQueueMixin, self).studio_view(),
                                      lookup_dirs=self.get_template_dirs())
         fragment.add_content(self.load_template('xblock_ifmo/settings_views/xqueue.mako'))
+
+        context = context or {}
+        deep_update(context, {'render_context': self.get_settings_context()})
+        fragment.add_context(context)
+
         return fragment
 
     @XBlock.json_handler

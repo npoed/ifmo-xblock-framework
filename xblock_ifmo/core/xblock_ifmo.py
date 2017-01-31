@@ -131,7 +131,13 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
 
         fragment = FragmentMakoChain(lookup_dirs=self.get_template_dirs(),
                                      content=self.load_template('xblock_ifmo/settings_view.mako'))
+        fragment.add_javascript(self.load_js('ifmo-xblock.js'))
         fragment.add_css(self.load_css('settings.css'))
+        fragment.initialize_js('IfmoXBlockSettingsView')
+
+        context = context or {}
+        deep_update(context, {'render_context': self.get_settings_context()})
+        fragment.add_context(context)
 
         return fragment
 
@@ -139,6 +145,7 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
     def get_student_context(self, user=None):
         return self.get_student_context_base(user)
 
+    @reify_f
     def get_settings_context(self):
         return {
             'id': str(self.scope_ids.usage_id),
