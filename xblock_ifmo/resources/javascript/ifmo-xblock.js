@@ -68,10 +68,11 @@ function IfmoXBlockStudentView(runtime, element)
 }
 
 xblock_mixin(IfmoXBlockStudentView.prototype, {
-    pre_init_xblock: function(self, runtime, element, $, _) {
-       if (require === undefined) {
+    init_xblock_ready: function($, _) {
+        var self = this;
+        if (require === undefined) {
             function loadjs(url) {
-                $("<script>").attr("type", "text/javascript").attr("src", url).appendTo(element);
+                $("<script>").attr("type", "text/javascript").attr("src", url).appendTo(self.element);
             }
             loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.iframe-transport.js");
             loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.fileupload.js");
@@ -79,7 +80,7 @@ xblock_mixin(IfmoXBlockStudentView.prototype, {
         } else {
             require(["jquery", "underscore", "jquery.fileupload"], self.init_xblock);
         }
-        init_modals(runtime, element, $, _, self.hooks, self.helpers);
+        init_modals(self.runtime, self.element, $, _, self.hooks, self.helpers);
     },
     init_xblock: function($, _) {
        // pass
