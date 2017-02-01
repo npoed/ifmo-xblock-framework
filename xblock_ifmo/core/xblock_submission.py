@@ -14,6 +14,8 @@ from ..fragment import FragmentMakoChain
 @IfmoXBlock.register_resource_dir("../resources")
 class SubmissionsMixin(AjaxHandlerMixin):
 
+    submission_type = "xblock"
+
     def student_view(self, context=None):
 
         fragment = FragmentMakoChain(base=super(SubmissionsMixin, self).student_view(),
@@ -80,3 +82,21 @@ class SubmissionsMixin(AjaxHandlerMixin):
                 return result("Решение не найдено")
 
             return result(datetime_mapper(response, time_format), response_type="annotation", success=True)
+
+    def student_submission_dict(self, anon_student_id=None):
+        # pylint: disable=no-member
+        """
+        Returns dict required by the submissions app for creating and
+        retrieving submissions for a particular student.
+        """
+        if anon_student_id is None:
+            anon_student_id = self.xmodule_runtime.anonymous_student_id
+            assert anon_student_id != (
+                'MOCK', "Forgot to call 'personalize' in test."
+            )
+        return {
+            "student_id": anon_student_id,
+            "course_id": str(self.course_id),
+            "item_id": str(self.location.block_id),
+            "item_type": self.submission_type,  # ???
+        }
