@@ -14,6 +14,18 @@ function IfmoXBlockSettingsView(runtime, element)
 xblock_mixin(IfmoXBlockSettingsView.prototype, {
 
     save: function() {
+        // Студия в качестве this даёт совсем на эту вьюху и даже не её потомков,
+        // а собственный объект, в котором есть разве что name, runtime и element.
+        // Поэтому всем потомкам пока что необходимо определять свой собственный save,
+        // и передавать через apply нужный this для того, чтобы работал validate() и
+        // другие собственные методы.
+        //
+        // Пример:
+        // self.save = function()
+        // {
+        //     MyXBlockSettingsView.superclass.save.apply(self);
+        // };
+
 
         var self = this;
         self.runtime.notify('save', {state: 'start'});

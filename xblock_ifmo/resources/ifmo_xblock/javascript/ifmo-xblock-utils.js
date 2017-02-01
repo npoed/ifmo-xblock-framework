@@ -27,3 +27,5 @@ function xblock_extend(Child, Parent)
     Child.prototype.constructor = Child;
     Child.superclass = Parent.prototype;
 }
+
+console.log("utils loaded");

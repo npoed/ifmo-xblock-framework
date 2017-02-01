@@ -4,6 +4,7 @@ import collections
 import datetime
 import hashlib
 import pytz
+import re
 
 from django.core.exceptions import PermissionDenied
 from functools import partial, wraps
@@ -52,6 +53,7 @@ def reify(meth):
 
 def reify_f(function):
     memo = {}
+
     @wraps(function)
     def wrapper(*args):
         if args in memo:
@@ -116,3 +118,24 @@ def file_storage_path(location, filename):
         )
     )
     return path
+
+
+def convert_xblock_name(cls, capitalize=None):
+    """
+    Converts XBlock class name from CamelCase to underscore_style.
+
+    Capitalize is optional param containing list of names that should be left as single word.
+    I.e. XBlock should be left as xblock, so default value is ['XBlock']. Any additional values
+    are expected.
+
+    :param name: Class name to convert
+    :param capitalize: List of names, that should be left as single word
+    :return:
+    """
+    capitalize = ["XBlock"] + (capitalize or [])
+    name = cls.__name__
+
+    for x in capitalize:
+        name = name.replace(x, x.capitalize())
+    name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()

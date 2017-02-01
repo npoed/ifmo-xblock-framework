@@ -53,7 +53,7 @@ xblock_mixin(IfmoXBlockStudentView.prototype, {
         init_modals(self.runtime, self.element, $, _, self.hooks, self.helpers);
     },
     init_xblock: function($, _) {
-       // pass
+        $(this.element).find('.instructor-info-action').leanModal();
     },
     add_hooks: function(self, new_hooks) {
        xblock_mixin(self.hooks, new_hooks); // probably should use _.js?

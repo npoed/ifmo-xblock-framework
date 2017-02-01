@@ -1,12 +1,16 @@
+import collections
 import inspect
+import itertools
 import path
 
 from django.template import Context, Template
 
+from ..utils import convert_xblock_name, reify_f
+
 
 class ResourcesMixin(object):
 
-    resource_dirs = []
+    resource_dirs = collections.defaultdict(set)
 
     def render_template(self, template_path, context=None):
         """
@@ -23,7 +27,7 @@ class ResourcesMixin(object):
         Gets the content of a resource
         """
         resource_content = None
-        for d in self.resource_dirs:
+        for d in itertools.chain.from_iterable([self.resource_dirs[x] for x in inspect.getmro(self.__class__)]):
             try:
                 with open(d / resource_path) as f:
                     resource_content = f.read()
@@ -48,18 +52,22 @@ class ResourcesMixin(object):
         else:
             return self.load_resource(template_name, utf8=utf8)
 
+    @reify_f
     def get_template_dirs(self):
-        return [x / "templates" for x in self.resource_dirs]
+        iter_dirs = itertools.chain.from_iterable([self.resource_dirs[x] for x in inspect.getmro(self.__class__)])
+        return [d / "templates" for d in iter_dirs if d.exists()]  # probably should check (d / "templates").exists()?
 
     def load_css(self, css_name):
         css_name = 'styles/%s' % css_name
         return self.load_resource(css_name)
 
     @classmethod
-    def register_resource_dir(cls, resource_dir="resources"):
+    def register_resource_dir(cls, resource_dir=None, capitalize=None):
+
         def _register_template_path(clz):
-            cls.resource_dirs += [
-                path.path(inspect.getfile(clz)).dirname().abspath() / resource_dir
-            ]
+            r_dir = resource_dir or ("resources/%s" % convert_xblock_name(clz, capitalize))
+            cls.resource_dirs[clz].add(
+                (path.path(inspect.getfile(clz)).dirname().abspath() / r_dir).normpath()
+            )
             return clz
         return _register_template_path

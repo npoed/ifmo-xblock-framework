@@ -18,7 +18,7 @@ from .xblock_ifmo_resources import ResourcesMixin
 logger = logging.getLogger(__name__)
 
 
-@ResourcesMixin.register_resource_dir("../resources")
+@ResourcesMixin.register_resource_dir("../resources/ifmo_xblock")
 class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
 
     has_score = True
