@@ -193,6 +193,17 @@ class XQueueMixin(AjaxHandlerMixin, XBlock):
         else:
             return "Модуль для указанного пользователя не найден."
 
+    def get_settings_context(self):
+
+        context = super(XQueueMixin, self).get_settings_context()
+        deep_update(context, {
+            'metadata': {
+                'queue_name': self.queue_name,
+            },
+        })
+
+        return context
+
     @XBlock.json_handler
     def get_active_status_list(self, data, suffix=''):
         """
