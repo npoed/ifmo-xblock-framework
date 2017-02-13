@@ -61,6 +61,7 @@
                     <tr><td>Пользователь</td><td><%= username %></td></tr>
                     <tr><td>Номер попытки</td><td><%= submission.attempt_number %></td></tr>
                     <tr><td>Отправлено</td><td><%= submission.submitted_at %></td></tr>
+                    <tr><td>uuid</td><td><%= submission.uuid %></td></tr>
                 </tbody>
             </table>
         </p>
