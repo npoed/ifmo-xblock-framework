@@ -128,7 +128,7 @@ def convert_xblock_name(cls, capitalize=None):
     I.e. XBlock should be left as xblock, so default value is ['XBlock']. Any additional values
     are expected.
 
-    :param name: Class name to convert
+    :param cls: Class, which name to convert of
     :param capitalize: List of names, that should be left as single word
     :return:
     """
@@ -139,3 +139,34 @@ def convert_xblock_name(cls, capitalize=None):
         name = name.replace(x, x.capitalize())
     name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
+
+
+def DefaultedDescriptor(base_class, default_condition=lambda x: x is None, **args):  # pylint: disable=invalid-name
+    """
+    Создаёт потомок класса, у которого переопределен __get__.
+
+    Вызывает __get__ у родителя. Если он удовлетворяет условию default_condition, возвращает default.
+
+    Используется для изменения поведения дескриптора (поля у XBlock'а). Значение по-умолчанию у него возвращается в том
+    случае, если закого поля в принципе не существует в его сериализованной версии (например, прочитанной из БД). При
+    этом, у поля может быть ранее задано значение, которое не может корректно использовано, например None или пустая
+    строка. В таком случае иногда может потребоваться вернуть в качестве ответа неоторое непустное значение
+    по-умолчанию.
+
+    Пример: в настройках XBlock'а инструктор задал пустое значение для ссылки на сервис отображающий отчёты. Подсистема
+    платформы не считает его пустым, а ассоциирует его с пустой строкой, но это не имеет смысла, и требуется в этом
+    случае использовать некоторое значение по-умолчанию.
+
+    :param base_class: Базовый класс дескриптора
+    :param default_condition: Условие, при котором требуется вернуть значение по-умолчанию.
+    :param args: Остальные параметры дескриптора
+    :return:
+    """
+    def __get__(self, xblock, xblock_class):
+        value = super(self.__class__, self).__get__(xblock, xblock_class)
+        return self._default if default_condition(value) else value
+    derived_dict = {
+        "__get__": __get__,
+    }
+    derived = type("%sNoneDefaulted" % base_class.__name__, (base_class,), derived_dict)
+    return derived(**args)
