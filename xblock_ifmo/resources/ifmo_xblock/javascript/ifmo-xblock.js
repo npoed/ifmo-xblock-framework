@@ -49,7 +49,6 @@ xblock_mixin(IfmoXBlockStudentView.prototype, {
                     $("<script>").attr("type", "text/javascript").attr("src", url).appendTo(self.element);
                     $ifmo_xblock_loaded_js[url] = 1;
                 }
-                console.log($ifmo_xblock_loaded_js);
             }
             loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.iframe-transport.js");
             loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.fileupload.js");
