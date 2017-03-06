@@ -42,7 +42,14 @@ xblock_mixin(IfmoXBlockStudentView.prototype, {
         var self = this;
         if (require === undefined) {
             function loadjs(url) {
-                $("<script>").attr("type", "text/javascript").attr("src", url).appendTo(self.element);
+                if ((typeof $ifmo_xblock_loaded_js === 'undefined') || ($ifmo_xblock_loaded_js === undefined)) {
+                    $ifmo_xblock_loaded_js = {}
+                }
+                if (!(url in $ifmo_xblock_loaded_js)) {
+                    $("<script>").attr("type", "text/javascript").attr("src", url).appendTo(self.element);
+                    $ifmo_xblock_loaded_js[url] = 1;
+                }
+                console.log($ifmo_xblock_loaded_js);
             }
             loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.iframe-transport.js");
             loadjs("/static/js/vendor/jQuery-File-Upload/js/jquery.fileupload.js");
