@@ -120,6 +120,7 @@ class IfmoXBlock(XBlockFieldsMixin, ResourcesMixin, XBlock):
         fragment.add_javascript(self.load_js('modals/init-modals.js'))
         fragment.add_javascript(self.load_js('modals/state-modal.js'))
         fragment.add_javascript(self.load_js('modals/debug-info-modal.js'))
+        fragment.add_css(self.load_css('base.css'))
         fragment.add_css(self.load_css('modal.css'))
 
         context = context or {}
