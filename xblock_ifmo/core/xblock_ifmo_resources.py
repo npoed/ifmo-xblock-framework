@@ -1,7 +1,7 @@
 import collections
 import inspect
 import itertools
-import path
+from path import Path
 
 from django.template import Context, Template
 
@@ -67,7 +67,7 @@ class ResourcesMixin(object):
         def _register_template_path(clz):
             r_dir = resource_dir or ("resources/%s" % convert_xblock_name(clz, capitalize))
             cls.resource_dirs[clz].add(
-                (path.path(inspect.getfile(clz)).dirname().abspath() / r_dir).normpath()
+                (Path(inspect.getfile(clz)).dirname().abspath() / r_dir).normpath()
             )
             return clz
         return _register_template_path

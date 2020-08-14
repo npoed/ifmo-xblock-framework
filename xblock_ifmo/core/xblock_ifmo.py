@@ -4,7 +4,6 @@ import logging
 
 from courseware.models import StudentModule
 from django.contrib.auth.models import User
-from path import path
 from xblock.core import XBlock
 from xmodule.util.duedate import get_extended_due_date
 from webob.response import Response
